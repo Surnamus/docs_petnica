@@ -1,11 +1,12 @@
-import toolbar_2
 import tkinter as tk
+from tkinter import filedialog
 def savefile(doc):
-    open(doc, 'w').write(toolbar_2.inputtxt)
+    from toolbar_2 import inputtxt
+    open(doc, 'w').write(inputtxt)
     doc.close()
 def save_on_click(self):
-        filetext = self.basket_textbox.get("1.0", "end-1c")
-        save_text = tk.filedialog.asksaveasfilename(
+        filetext = self.get("1.0", "end-1c")
+        save_text = filedialog.asksaveasfilename(
             defaultextension="txt",
             filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
         )
