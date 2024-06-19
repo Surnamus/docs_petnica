@@ -28,3 +28,5 @@ def start():
         
 print("[server]server is starting...")
 start()
+
+server.close()
