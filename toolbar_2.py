@@ -1,5 +1,4 @@
 import tkinter as tk
-
 def take_input():
     input_text = inputtxt.get("1.0", "end-1c")
     print(input_text)
@@ -18,7 +17,7 @@ broj_klikova2 = 0
 broj_klikova3 = 0
 broj_klikova4 = 0
 
-dugme1 = tk.Button(prozor, text="File", command=lambda: button_action(1))
+dugme1 = tk.Button(prozor, text="Save", command=lambda: button_action(1))
 dugme2 = tk.Button(prozor, text="Edit", command=lambda: button_action(2))
 dugme3 = tk.Button(prozor, text="Insert", command=lambda: button_action(3))
 dugme4 = tk.Button(prozor, text="Font", command=lambda: button_action(4))
@@ -31,10 +30,9 @@ dugme4.grid(row=0, column=3, sticky="nw", padx=5, pady=5)
 def klik1(dogadjaj):
     global broj_klikova1
     broj_klikova1 += 1
-    if broj_klikova1 == 1:
-        dugme1.configure(text="Save")
-    elif broj_klikova1 == 2:
-        pass
+    if broj_klikova1 >= 1:
+        from savingafile import save_on_click
+        save_on_click(inputtxt)
 dugme1.bind("<ButtonRelease-1>", klik1)
 
 def klik2(dogadjaj):
