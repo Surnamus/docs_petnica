@@ -5,7 +5,7 @@ DISCONNECT = "disconnect"
 HEADER = 64
 PORT = 8080
 FORMAT = "utf-8"
-SERVER = "127.0.0.1"
+SERVER = "192.168.0.137"
 ADDR = (SERVER, PORT)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -13,10 +13,13 @@ client.connect(ADDR)
 
 def send(msg):
     message = msg.encode(FORMAT)
-    msg_length = len(msg)
-    send_length = str(msg_length).encode(FORMAT)
-    send_length += b' ' *(HEADER - len(send_length))
-    client.send(send_length)
     client.send(message)
+
+while True:
+    msg = input()
+    send(msg)
+
+    if msg == "stop":
+        break
 
 send("hello")
