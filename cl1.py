@@ -4,44 +4,37 @@ HEADER = 10
 PORT = 7171
 FORMAT = "utf-8"
 DISCONNECT_MESSAGE = "disconnect"
-SERVER = "127.0.0.1"  # Adjust as needed
+SERVER = "127.0.0.1"
 ADDR = (SERVER, PORT)
 
+# Create and connect the client socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDR)
 
-def send_message(message):
-    message = message.encode(FORMAT)
-    msg_length = len(message)
-    send_length = f"{msg_length:<{HEADER}}".encode(FORMAT)
-    client.send(send_length)
-    client.send(message)
-    response_length = client.recv(HEADER).decode(FORMAT)
-    if response_length:
-        response_length = int(response_length.strip())
-        response = client.recv(response_length).decode(FORMAT)
-        return response
-
 def main():
-    print("Enter the text matrix (end with an empty line):")
-    original_text = []
-    while True:
-        line = input()
-        if line == "":
-            break
-        original_text.append(line)
-    
-    insert_text_str = input("Enter the text to insert: ")
-    row = int(input("Enter the cursor row position: "))
-    column = int(input("Enter the cursor column position: "))
-    
-    # Prepare the message to send
-    message = '|'.join(original_text) + f"|{insert_text_str}|{row}|{column}"
-    response = send_message(message)
-    print("Modified Text:")
-    print(response.replace('|', '\n'))
-    
-    send_message(DISCONNECT_MESSAGE)
+    try:
+        # Input the cursor position and text to insert
+        cursor_pos = input("Enter the cursor position (row,column): ")
+        text_to_insert = input("Enter the text to insert: ")
+
+        # Send the cursor position
+        cursor_pos_formatted = f"{cursor_pos:<{HEADER}}"
+        client.send(cursor_pos_formatted.encode(FORMAT))
+
+        # Send the text to insert
+        client.send(text_to_insert.encode(FORMAT))
+
+        # Receive and print the modified text
+        modified_text = client.recv(1024).decode(FORMAT)
+        print("Modified Text:")
+        result = ''.join(''.join(row) for row in modified_text)
+        print(result)
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        # Send the disconnect message and close the connection
+        client.send(DISCONNECT_MESSAGE.encode(FORMAT))
+        client.close()
 
 if __name__ == "__main__":
     main()
